@@ -1,0 +1,1 @@
+console.log('Hello, jenkins! This is a simple Node.js application.');
