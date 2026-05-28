@@ -11,7 +11,7 @@ stages {
 
     stage('Test') {
         steps {
-            sh 'node app.js'
+            sh 'node index.js'
         }
     }
 
