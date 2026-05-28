@@ -19,9 +19,17 @@ pipeline {
 
                 sh '''
 
-                /usr/local/bin/pm2 restart myapp || /usr/local/bin/pm2 start index.js --name myapp
+                echo "Current Path:"
+                pwd
 
-                /usr/local/bin/pm2 save
+                echo "Files:"
+                ls
+
+                pm2 restart myapp || pm2 start index.js --name myapp
+
+                pm2 save
+
+                pm2 list
 
                 '''
 
