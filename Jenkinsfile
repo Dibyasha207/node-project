@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     environment {
-        // Jenkins ko build khatam hone par process kill karne se rokne ke liye
         JENKINS_NODE_COOKIE = 'dontKillMe'
     }
 
@@ -16,10 +15,18 @@ pipeline {
         stage('Deploy Stage') {
             steps {
                 sh '''
-                # Sudo ke sath ubuntu user bankar PM2 ko reload ya start karein
-                sudo -u ubuntu /usr/local/bin/pm2 reload myapp || sudo -u ubuntu /usr/local/bin/pm2 start index.js --name myapp
+                # 1. Jenkins ke naye code ko aapke chalne wale app folder mein copy karein
+                # (Yahan '/home/ubuntu/myapp-folder' ki jagah apna asli path likhein)
+                sudo cp -r * /home/ubuntu/myapp-folder/
                 
-                # PM2 state save karein
+                # 2. Us folder ke andar jayein jahan aapka app chalta hai
+                cd /home/ubuntu/myapp-folder/
+                
+                # 3. Dependencies install karein naye folder mein
+                sudo -u ubuntu npm install
+                
+                # 4. Ab PM2 ko naye code ke sath reload ya restart karein
+                sudo -u ubuntu /usr/local/bin/pm2 reload myapp || sudo -u ubuntu /usr/local/bin/pm2 start index.js --name myapp
                 sudo -u ubuntu /usr/local/bin/pm2 save
                 '''
             }
