@@ -2,7 +2,7 @@ const http = require('http');
 
 const server = http.createServer((req, res) => {
 
-   res.write("Automatically restarted server after code changes!");
+   res.write("Automatically restarted server");
 
    res.end();
 
