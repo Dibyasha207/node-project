@@ -2,7 +2,7 @@ const http = require('http');
 
 const server = http.createServer((req, res) => {
 
-   res.write("Automatic restart with Nodemon!");
+   res.write("Automatic restart");
 
    res.end();
 

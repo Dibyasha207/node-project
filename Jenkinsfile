@@ -2,14 +2,13 @@ pipeline {
     agent any
 
     environment {
-        // Jenkins ko build successful hone par process kill karne se rokne ke liye
+        // Jenkins ko build end hone par process kill karne se rokne ke liye
         JENKINS_NODE_COOKIE = 'dontKillMe'
     }
 
     stages {
         stage('Build Stage') {
             steps {
-                // Dependencies install karein
                 sh 'npm install'
             }
         }
@@ -17,10 +16,16 @@ pipeline {
         stage('Deploy Stage') {
             steps {
                 sh '''
-                # Ubuntu user bankar isi workspace folder se PM2 ko reload ya restart karein
-                sudo -u ubuntu /usr/local/bin/pm2 reload myapp || sudo -u ubuntu /usr/local/bin/pm2 start index.js --name myapp
+                # 1. Purane memory instance ko poori tarah delete karein taaki cache clear ho jaye
+                sudo -u ubuntu /usr/local/bin/pm2 delete myapp || true
                 
-                # PM2 state save karein
+                # 2. Kuch seconds ka wait karein taaki port 3000 poori tarah free ho jaye
+                sleep 2
+                
+                # 3. Naye code ke sath fresh instance start karein (Isi workspace directory se)
+                sudo -u ubuntu /usr/local/bin/pm2 start index.js --name myapp
+                
+                # 4. State ko save karein
                 sudo -u ubuntu /usr/local/bin/pm2 save
                 '''
             }
